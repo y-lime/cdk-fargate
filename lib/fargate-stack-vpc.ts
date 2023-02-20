@@ -32,6 +32,12 @@ export class FargateStackVpc extends cdk.Stack {
                     name: "subnet-private-db-",
                     subnetType: ec2.SubnetType.PRIVATE_ISOLATED,
                 },
+                {
+                    cidrMask: 24,
+                    name: "subnet-private-vpce-",
+                    subnetType: ec2.SubnetType.PRIVATE_ISOLATED,
+                },
+
             ]
         });
 
