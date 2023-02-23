@@ -1,14 +1,14 @@
-import * as cdk from 'aws-cdk-lib';
+import { Stack, StackProps } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
+import { FargateStackEc2 } from './fargate-stack-ec2';
 import { FargateStackECR } from './fargate-stack-ecr';
 import { FargateStackIam } from './fargate-stack-iam';
 import { FargateStackSG } from './fargate-stack-sg';
 import { FargateStackVpc } from './fargate-stack-vpc';
 import { FargateStackVpce } from './fargate-stack-vpce';
-import { FargateStackEc2 } from './fartage-stack-ec2';
 
-export class FargateStack extends cdk.Stack {
-  constructor(scope: Construct, id: string, props?: cdk.StackProps) {
+export class FargateStack extends Stack {
+  constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
 
     // network
