@@ -15,7 +15,9 @@ export class FargateStack extends Stack {
     const fargatestackvpc = new FargateStackVpc(this, 'VpcStack');
 
     // SecurityGroup
-    const fargatestacksg = new FargateStackSG(this, 'SgStack', fargatestackvpc.fargateVpc);
+    const fargatestacksg = new FargateStackSG(this, 'SgStack', {
+      vpc: fargatestackvpc.fargateVpc
+    });
 
     // IAM Role
     const fargatestackiam = new FargateStackIam(this, 'IamStack');

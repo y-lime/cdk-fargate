@@ -10,7 +10,7 @@ export interface Ec2Props {
 }
 
 export class FargateStackEc2 extends Stack {
-    constructor(scope: Construct, id: string, ec2props: Ec2Props, props?: StackProps) {
+    constructor(scope: Construct, id: string, props: StackProps & Ec2Props) {
         super(scope, id, props);
 
         const userData = UserData.forLinux({
@@ -31,11 +31,11 @@ export class FargateStackEc2 extends Stack {
             machineImage: MachineImage.latestAmazonLinux({
                 generation: AmazonLinuxGeneration.AMAZON_LINUX_2,
             }),
-            vpc: ec2props.vpc,
-            securityGroup: ec2props.sg,
-            role: ec2props.role,
+            vpc: props.vpc,
+            securityGroup: props.sg,
+            role: props.role,
             userData: userData,
-            vpcSubnets: ec2props.vpc.selectSubnets({
+            vpcSubnets: props.vpc.selectSubnets({
                 subnetGroupName: 'subnet-private-management-',
             }),
         });

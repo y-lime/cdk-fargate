@@ -2,6 +2,10 @@ import { Stack, StackProps, Tags } from 'aws-cdk-lib';
 import { Peer, Port, SecurityGroup, Vpc } from 'aws-cdk-lib/aws-ec2';
 import { Construct } from 'constructs';
 
+export interface SgProps {
+    vpc: Vpc,
+}
+
 export class FargateStackSG extends Stack {
     public readonly sgAlb: SecurityGroup;
     public readonly sgContainer: SecurityGroup;
@@ -9,11 +13,11 @@ export class FargateStackSG extends Stack {
     public readonly sgRds: SecurityGroup;
     public readonly sgVpce: SecurityGroup;
 
-    constructor(scope: Construct, id: string, vpc: Vpc, props?: StackProps) {
+    constructor(scope: Construct, id: string, props: StackProps & SgProps) {
         super(scope, id, props);
 
         const sgAlb = new SecurityGroup(this, 'sg-alb', {
-            vpc: vpc,
+            vpc: props.vpc,
             allowAllOutbound: true,
             securityGroupName: 'fargate-sg-alb',
             description: 'For ALB',
@@ -22,7 +26,7 @@ export class FargateStackSG extends Stack {
         this.sgAlb = sgAlb;
 
         const sgContainer = new SecurityGroup(this, 'sg-container', {
-            vpc: vpc,
+            vpc: props.vpc,
             allowAllOutbound: true,
             securityGroupName: 'fargate-sg-container',
             description: 'For ECS Container',
@@ -31,7 +35,7 @@ export class FargateStackSG extends Stack {
         this.sgContainer = sgContainer;
 
         const sgRds = new SecurityGroup(this, 'sg-rds', {
-            vpc: vpc,
+            vpc: props.vpc,
             allowAllOutbound: true,
             securityGroupName: 'fargate-sg-rds',
             description: 'For RDS',
@@ -40,7 +44,7 @@ export class FargateStackSG extends Stack {
         this.sgRds = sgRds;
 
         const sgVpce = new SecurityGroup(this, 'sg-vpce', {
-            vpc: vpc,
+            vpc: props.vpc,
             allowAllOutbound: true,
             securityGroupName: 'fargate-sg-vpce',
             description: 'For VPC Endpoint',
@@ -49,7 +53,7 @@ export class FargateStackSG extends Stack {
         this.sgVpce = sgVpce;
 
         const sgManagement = new SecurityGroup(this, 'sg-management', {
-            vpc: vpc,
+            vpc: props.vpc,
             allowAllOutbound: true,
             securityGroupName: 'fargate-sg-management',
             description: 'For Management EC2 Instance',
