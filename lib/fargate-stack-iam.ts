@@ -20,6 +20,7 @@ export class FargateStackIam extends Stack {
                 },
 
             ],
+            roleName: 'role-fargate-management-ec2',
         });
         Tags.of(iamRoleForManagementEc2).add('Name', 'iam-role-for-management-ec2');
 

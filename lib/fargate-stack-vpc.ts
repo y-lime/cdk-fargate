@@ -1,5 +1,5 @@
 import { Stack, StackProps } from 'aws-cdk-lib';
-import { SubnetType, Vpc } from 'aws-cdk-lib/aws-ec2';
+import { IpAddresses, SubnetType, Vpc } from 'aws-cdk-lib/aws-ec2';
 import { Construct } from 'constructs';
 
 export class FargateStackVpc extends Stack {
@@ -9,7 +9,7 @@ export class FargateStackVpc extends Stack {
         super(scope, id, props);
 
         const fargateVpc = new Vpc(this, 'vpc', {
-            cidr: '20.100.0.0/16',
+            ipAddresses: IpAddresses.cidr('20.100.0.0/16'),
             maxAzs: 2,
             subnetConfiguration: [
                 {

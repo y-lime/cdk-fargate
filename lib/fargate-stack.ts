@@ -3,6 +3,8 @@ import { Construct } from 'constructs';
 import { FargateStackEc2 } from './fargate-stack-ec2';
 import { FargateStackECR } from './fargate-stack-ecr';
 import { FargateStackIam } from './fargate-stack-iam';
+import { FargateStackKms } from './fargate-stack-kms';
+import { FargateStackRds } from './fargate-stack-rds';
 import { FargateStackSG } from './fargate-stack-sg';
 import { FargateStackVpc } from './fargate-stack-vpc';
 import { FargateStackVpce } from './fargate-stack-vpce';
@@ -36,6 +38,16 @@ export class FargateStack extends Stack {
       vpc: fargatestackvpc.fargateVpc,
       sg: fargatestacksg.sgManagement,
       role: fargatestackiam.iamRoleForManagementEc2,
+    });
+
+    // kms
+    const fargatestackkms = new FargateStackKms(this, 'KmsStack');
+
+    // rds
+    const fargatestackrds = new FargateStackRds(this, 'RdsStack', {
+      vpc: fargatestackvpc.fargateVpc,
+      sg: fargatestacksg.sgRds,
+      encKey: fargatestackkms.rdsKey,
     });
 
   }

@@ -34,15 +34,6 @@ export class FargateStackSG extends Stack {
         Tags.of(sgContainer).add('Name', 'fargate-sg-container');
         this.sgContainer = sgContainer;
 
-        const sgRds = new SecurityGroup(this, 'sg-rds', {
-            vpc: props.vpc,
-            allowAllOutbound: true,
-            securityGroupName: 'fargate-sg-rds',
-            description: 'For RDS',
-        });
-        Tags.of(sgRds).add('Name', 'fargate-sg-rds');
-        this.sgRds = sgRds;
-
         const sgVpce = new SecurityGroup(this, 'sg-vpce', {
             vpc: props.vpc,
             allowAllOutbound: true,
@@ -62,5 +53,15 @@ export class FargateStackSG extends Stack {
         Tags.of(sgManagement).add('Name', 'fargate-sg-management');
         this.sgManagement = sgManagement;
 
+        const sgRds = new SecurityGroup(this, 'sg-rds', {
+            vpc: props.vpc,
+            allowAllOutbound: true,
+            securityGroupName: 'fargate-sg-rds',
+            description: 'For RDS',
+        });
+        sgRds.addIngressRule(Peer.securityGroupId(sgContainer.securityGroupId), Port.tcp(5432), 'from ECS Container');
+        sgRds.addIngressRule(Peer.securityGroupId(sgManagement.securityGroupId), Port.tcp(5432), 'from Management EC2 Instance');
+        Tags.of(sgRds).add('Name', 'fargate-sg-rds');
+        this.sgRds = sgRds;
     }
 }
