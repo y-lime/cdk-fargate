@@ -1,17 +1,17 @@
 import { Stack, StackProps, Tags } from 'aws-cdk-lib';
-import { InstanceClass, InstanceSize, InstanceType, SecurityGroup, Vpc } from 'aws-cdk-lib/aws-ec2';
-import { Key } from 'aws-cdk-lib/aws-kms';
-import { AuroraPostgresEngineVersion, Credentials, DatabaseCluster, DatabaseClusterEngine, ParameterGroup, SubnetGroup } from 'aws-cdk-lib/aws-rds';
+import { InstanceClass, InstanceSize, InstanceType, ISecurityGroup, IVpc } from 'aws-cdk-lib/aws-ec2';
+import { IKey } from 'aws-cdk-lib/aws-kms';
+import { AuroraPostgresEngineVersion, Credentials, DatabaseCluster, DatabaseClusterEngine, IDatabaseCluster, ParameterGroup, SubnetGroup } from 'aws-cdk-lib/aws-rds';
 import { Construct } from 'constructs';
 
 export interface RdsProps {
-    vpc: Vpc,
-    sg: SecurityGroup,
-    encKey: Key,
+    vpc: IVpc,
+    sg: ISecurityGroup,
+    encKey: IKey,
 }
 
 export class FargateStackRds extends Stack {
-    public readonly dbCluster: DatabaseCluster;
+    public readonly dbCluster: IDatabaseCluster;
 
     constructor(scope: Construct, id: string, props: StackProps & RdsProps) {
         super(scope, id, props);

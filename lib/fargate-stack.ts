@@ -18,7 +18,7 @@ export class FargateStack extends Stack {
 
     // SecurityGroup
     const fargatestacksg = new FargateStackSG(this, 'SgStack', {
-      vpc: fargatestackvpc.fargateVpc
+      vpc: fargatestackvpc.vpc
     });
 
     // IAM Role
@@ -26,7 +26,7 @@ export class FargateStack extends Stack {
 
     // Vpc Endpoint
     const fargatestackvpce = new FargateStackVpce(this, 'VpceStack', {
-      vpc: fargatestackvpc.fargateVpc,
+      vpc: fargatestackvpc.vpc,
       sg: fargatestacksg.sgVpce,
     });
 
@@ -35,7 +35,7 @@ export class FargateStack extends Stack {
 
     // ec2
     const fargatestackec2 = new FargateStackEc2(this, 'Ec2Stack', {
-      vpc: fargatestackvpc.fargateVpc,
+      vpc: fargatestackvpc.vpc,
       sg: fargatestacksg.sgManagement,
       role: fargatestackiam.iamRoleForManagementEc2,
     });
@@ -45,7 +45,7 @@ export class FargateStack extends Stack {
 
     // rds
     const fargatestackrds = new FargateStackRds(this, 'RdsStack', {
-      vpc: fargatestackvpc.fargateVpc,
+      vpc: fargatestackvpc.vpc,
       sg: fargatestacksg.sgRds,
       encKey: fargatestackkms.rdsKey,
     });

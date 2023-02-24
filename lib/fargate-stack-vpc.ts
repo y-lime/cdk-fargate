@@ -1,9 +1,9 @@
 import { Stack, StackProps } from 'aws-cdk-lib';
-import { IpAddresses, SubnetType, Vpc } from 'aws-cdk-lib/aws-ec2';
+import { IpAddresses, IVpc, SubnetType, Vpc } from 'aws-cdk-lib/aws-ec2';
 import { Construct } from 'constructs';
 
 export class FargateStackVpc extends Stack {
-    public readonly fargateVpc: Vpc;
+    public readonly vpc: IVpc;
 
     constructor(scope: Construct, id: string, props?: StackProps) {
         super(scope, id, props);
@@ -41,7 +41,7 @@ export class FargateStackVpc extends Stack {
             ]
         });
 
-        this.fargateVpc = fargateVpc;
+        this.vpc = fargateVpc;
     }
 
 }

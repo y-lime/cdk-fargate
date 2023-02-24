@@ -1,9 +1,9 @@
 import { Stack, StackProps, Tags } from 'aws-cdk-lib';
-import { Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam';
+import { IRole, Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam';
 import { Construct } from 'constructs';
 
 export class FargateStackIam extends Stack {
-    public readonly iamRoleForManagementEc2: Role;
+    public readonly iamRoleForManagementEc2: IRole;
 
     constructor(scope: Construct, id: string, props?: StackProps) {
         super(scope, id, props);

@@ -1,17 +1,17 @@
 import { Stack, StackProps, Tags } from 'aws-cdk-lib';
-import { Peer, Port, SecurityGroup, Vpc } from 'aws-cdk-lib/aws-ec2';
+import { ISecurityGroup, IVpc, Peer, Port, SecurityGroup } from 'aws-cdk-lib/aws-ec2';
 import { Construct } from 'constructs';
 
 export interface SgProps {
-    vpc: Vpc,
+    vpc: IVpc,
 }
 
 export class FargateStackSG extends Stack {
-    public readonly sgAlb: SecurityGroup;
-    public readonly sgContainer: SecurityGroup;
-    public readonly sgManagement: SecurityGroup;
-    public readonly sgRds: SecurityGroup;
-    public readonly sgVpce: SecurityGroup;
+    public readonly sgAlb: ISecurityGroup;
+    public readonly sgContainer: ISecurityGroup;
+    public readonly sgManagement: ISecurityGroup;
+    public readonly sgRds: ISecurityGroup;
+    public readonly sgVpce: ISecurityGroup;
 
     constructor(scope: Construct, id: string, props: StackProps & SgProps) {
         super(scope, id, props);

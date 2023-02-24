@@ -1,9 +1,9 @@
 import { Duration, RemovalPolicy, Stack, StackProps, Tags } from "aws-cdk-lib";
-import { Key, KeyUsage } from "aws-cdk-lib/aws-kms";
+import { IKey, Key, KeyUsage } from "aws-cdk-lib/aws-kms";
 import { Construct } from "constructs";
 
 export class FargateStackKms extends Stack {
-    public readonly rdsKey: Key;
+    public readonly rdsKey: IKey;
 
     constructor(scope: Construct, id: string, props?: StackProps) {
         super(scope, id, props);

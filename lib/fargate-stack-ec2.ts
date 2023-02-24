@@ -1,12 +1,12 @@
 import { Stack, StackProps, Tags } from 'aws-cdk-lib';
-import { AmazonLinuxGeneration, Instance, InstanceClass, InstanceSize, InstanceType, MachineImage, SecurityGroup, UserData, Vpc } from 'aws-cdk-lib/aws-ec2';
-import { Role } from 'aws-cdk-lib/aws-iam';
+import { AmazonLinuxGeneration, Instance, InstanceClass, InstanceSize, InstanceType, ISecurityGroup, IVpc, MachineImage, UserData } from 'aws-cdk-lib/aws-ec2';
+import { IRole } from 'aws-cdk-lib/aws-iam';
 import { Construct } from 'constructs';
 
 export interface Ec2Props {
-    vpc: Vpc;
-    sg: SecurityGroup;
-    role: Role;
+    vpc: IVpc;
+    sg: ISecurityGroup;
+    role: IRole;
 }
 
 export class FargateStackEc2 extends Stack {

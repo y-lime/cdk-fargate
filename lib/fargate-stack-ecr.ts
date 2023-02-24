@@ -1,9 +1,9 @@
 import { RemovalPolicy, Stack, StackProps } from 'aws-cdk-lib';
-import { Repository, RepositoryEncryption, TagMutability } from 'aws-cdk-lib/aws-ecr';
+import { IRepository, Repository, RepositoryEncryption, TagMutability } from 'aws-cdk-lib/aws-ecr';
 import { Construct } from 'constructs';
 
 export class FargateStackECR extends Stack {
-    public readonly myappEcr: Repository;
+    public readonly myappEcr: IRepository;
 
     constructor(scope: Construct, id: string, props?: StackProps,) {
         super(scope, id, props);

@@ -1,10 +1,10 @@
 import { Stack, StackProps, Tags } from 'aws-cdk-lib';
-import { GatewayVpcEndpoint, GatewayVpcEndpointAwsService, InterfaceVpcEndpoint, InterfaceVpcEndpointAwsService, SecurityGroup, Vpc } from 'aws-cdk-lib/aws-ec2';
+import { GatewayVpcEndpoint, GatewayVpcEndpointAwsService, InterfaceVpcEndpoint, InterfaceVpcEndpointAwsService, ISecurityGroup, IVpc } from 'aws-cdk-lib/aws-ec2';
 import { Construct } from 'constructs';
 
 export interface props {
-    vpc: Vpc;
-    sg: SecurityGroup;
+    vpc: IVpc;
+    sg: ISecurityGroup;
 }
 
 export class FargateStackVpce extends Stack {
