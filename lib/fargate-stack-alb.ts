@@ -1,8 +1,13 @@
 import { Stack, StackProps, Tags } from "aws-cdk-lib";
 import { ISecurityGroup, IVpc } from "aws-cdk-lib/aws-ec2";
-import { ApplicationLoadBalancer, ApplicationProtocol, ApplicationTargetGroup, TargetType } from "aws-cdk-lib/aws-elasticloadbalancingv2";
+import { ApplicationLoadBalancer, ApplicationProtocol, ApplicationTargetGroup, IApplicationTargetGroup, TargetType } from "aws-cdk-lib/aws-elasticloadbalancingv2";
 import { Construct } from "constructs";
-import { ContainerProps } from "./fargate-stack-ecs";
+
+export interface ContainerProps {
+    containerPort: number,
+    healthCheckPath: string,
+    healthCheckPort: number,
+}
 
 export interface AlbProps {
     vpc: IVpc,
@@ -11,6 +16,8 @@ export interface AlbProps {
 }
 
 export class FargateStackAlb extends Stack {
+    public readonly targetGroup: IApplicationTargetGroup;
+
     constructor(scope: Construct, id: string, props: StackProps & AlbProps) {
         super(scope, id, props);
 
@@ -38,6 +45,7 @@ export class FargateStackAlb extends Stack {
             },
         });
         Tags.of(targetGroupforEcs).add('Name', 'fargate-tg-for-ecs');
+        this.targetGroup = targetGroupforEcs;
 
         const listenerHTTP = albForEcs.addListener('ListenerHTTP', {
             port: 80,

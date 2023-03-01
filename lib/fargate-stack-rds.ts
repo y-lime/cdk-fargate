@@ -2,6 +2,7 @@ import { Stack, StackProps, Tags } from 'aws-cdk-lib';
 import { InstanceClass, InstanceSize, InstanceType, ISecurityGroup, IVpc } from 'aws-cdk-lib/aws-ec2';
 import { IKey } from 'aws-cdk-lib/aws-kms';
 import { AuroraPostgresEngineVersion, Credentials, DatabaseCluster, DatabaseClusterEngine, IDatabaseCluster, ParameterGroup, SubnetGroup } from 'aws-cdk-lib/aws-rds';
+import { ISecret } from 'aws-cdk-lib/aws-secretsmanager';
 import { Construct } from 'constructs';
 
 export interface RdsProps {
@@ -12,6 +13,7 @@ export interface RdsProps {
 
 export class FargateStackRds extends Stack {
     public readonly dbCluster: IDatabaseCluster;
+    public readonly dbSecret: ISecret;
 
     constructor(scope: Construct, id: string, props: StackProps & RdsProps) {
         super(scope, id, props);
@@ -62,6 +64,7 @@ export class FargateStackRds extends Stack {
             parameterGroup: customParameterGroup,
         });
         this.dbCluster = dbCluster;
+        this.dbSecret = dbCluster.secret!;
         Tags.of(dbCluster).add('Name', 'fargate-rdscluster');
     }
 }

@@ -2,6 +2,7 @@ import { Duration, RemovalPolicy, Stack, StackProps, Tags } from "aws-cdk-lib";
 import { ISecurityGroup, IVpc } from "aws-cdk-lib/aws-ec2";
 import { IRepository } from "aws-cdk-lib/aws-ecr";
 import { Cluster, ContainerImage, DeploymentControllerType, FargatePlatformVersion, FargateService, FargateTaskDefinition, LogDriver, Protocol, Secret } from "aws-cdk-lib/aws-ecs";
+import { IApplicationTargetGroup } from "aws-cdk-lib/aws-elasticloadbalancingv2";
 import { IRole } from "aws-cdk-lib/aws-iam";
 import { ILogGroup } from "aws-cdk-lib/aws-logs";
 import { ISecret } from "aws-cdk-lib/aws-secretsmanager";
@@ -15,6 +16,7 @@ export interface ContainerProps {
     healthCheckPath: string,
     healthCheckPort: number,
     logGroup: ILogGroup,
+    targetgroup: IApplicationTargetGroup,
 }
 
 export interface EcsProps {
@@ -35,8 +37,8 @@ export class FargateStackEcs extends Stack {
             family: 'fargate-taskdef',
             memoryLimitMiB: 2048,
             cpu: 1024,
-            executionRole: props?.ecsTaskExecRole,
-            taskRole: props?.ecsTaskRole,
+            executionRole: props.ecsTaskExecRole,
+            taskRole: props.ecsTaskRole,
         });
         taskDef.applyRemovalPolicy(RemovalPolicy.DESTROY);
         Tags.of(taskDef).add('Name', 'fargate-taskdef');
@@ -72,7 +74,7 @@ export class FargateStackEcs extends Stack {
             healthCheck: {
                 command: [
                     'CMD-SHELL',
-                    `curl -f http://localhost:${props.container.healthCheckPort}/${props.container.healthCheckPath} || exit 1`,
+                    `curl -f http://localhost:${props.container.healthCheckPort}${props.container.healthCheckPath} || exit 1`,
                 ],
                 interval: Duration.seconds(30),
                 retries: 3,
@@ -86,6 +88,7 @@ export class FargateStackEcs extends Stack {
             vpc: props.vpc,
             containerInsights: true,
         });
+        Tags.of(fargateEcsCluster).add('Name', 'fargate-ecs-cluster');
 
         // fargate service
         const fargateService = new FargateService(this, 'fargate-ecs-service', {
@@ -112,6 +115,7 @@ export class FargateStackEcs extends Stack {
                 availabilityZones: [props.vpc.availabilityZones[0]],
             }),
         });
-
+        fargateService.attachToApplicationTargetGroup(props.container.targetgroup);
+        Tags.of(fargateService).add('Name', 'fargate-ecs-service');
     }
 }

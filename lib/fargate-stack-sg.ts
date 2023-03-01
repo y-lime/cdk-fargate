@@ -4,6 +4,8 @@ import { Construct } from 'constructs';
 
 export interface SgProps {
     vpc: IVpc,
+    albPort: number,
+    containerPort: number,
 }
 
 export class FargateStackSG extends Stack {
@@ -22,6 +24,7 @@ export class FargateStackSG extends Stack {
             securityGroupName: 'fargate-sg-alb',
             description: 'For ALB',
         });
+        sgAlb.addIngressRule(Peer.ipv4(props.vpc.vpcCidrBlock), Port.tcp(props.albPort), 'from internal client');
         Tags.of(sgAlb).add('Name', 'fargate-sg-alb');
         this.sgAlb = sgAlb;
 
@@ -31,6 +34,7 @@ export class FargateStackSG extends Stack {
             securityGroupName: 'fargate-sg-container',
             description: 'For ECS Container',
         });
+        sgContainer.addIngressRule(Peer.securityGroupId(sgAlb.securityGroupId), Port.tcp(props.containerPort), 'from ALB');
         Tags.of(sgContainer).add('Name', 'fargate-sg-container');
         this.sgContainer = sgContainer;
 
